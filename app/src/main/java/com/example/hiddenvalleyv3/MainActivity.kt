@@ -38,7 +38,8 @@ class  MainActivity : AppCompatActivity() {
     lateinit var diceImage1: ImageView
     lateinit var diceImage2: ImageView
     lateinit var starImage: ImageView
-
+    private var randomInt1 = Random().nextInt(6) + 1
+    private var randomInt2 = Random().nextInt(6) + 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,15 +62,19 @@ class  MainActivity : AppCompatActivity() {
 
         clickerLetter1.setOnClickListener {
             Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show()
+            showLogin()
         }
         clickerNumber1.setOnClickListener {
             Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show()
+            showLogin()
         }
         clickerMatch1.setOnClickListener {
             Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show()
+            showLogin()
         }
         clickerCal1.setOnClickListener {
             Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show()
+            showLogin()
         }
 
 
@@ -143,14 +148,24 @@ class  MainActivity : AppCompatActivity() {
             }
             clickerNumber.setOnClickListener {
                 showNumGame()
+                starImage = findViewById(R.id.star_img)
+                starImage.setImageResource(R.drawable.star0)
+                rollStar()
                 backOrNext_number.setOnClickListener {
                     afterLoginPages()
                 }
-                starImage = findViewById(R.id.star_img)
-                starImage.setImageResource(R.drawable.star0)
 
                 num_btn.setOnClickListener {
                     rollStar()
+                }
+
+                ans_number.setOnClickListener {
+                    if (num_answer.text.toString().isNotEmpty()) {
+                        countTotalStar(randomInt1)
+                    }
+                    else {
+                        Toast.makeText(this, getString(R.string.please_enter_ans), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             clickerMatch.setOnClickListener {
@@ -163,17 +178,30 @@ class  MainActivity : AppCompatActivity() {
             }
             clickerCal.setOnClickListener {
                 showCalGame()
-                backOrNext.setOnClickListener {
-                    afterLoginPages()
-                }
                 diceImage1 = findViewById(R.id.dice_img1)
                 diceImage2 = findViewById(R.id.dice_img2)
 
                 diceImage1.setImageResource(R.drawable.dice_1)
                 diceImage2.setImageResource(R.drawable.dice_1)
+                rollDice()
+                backOrNext.setOnClickListener {
+                    afterLoginPages()
+                }
+
+
                 roll_button.setOnClickListener {
                     rollDice()
                 }
+
+                    answer_calculation.setOnClickListener {
+                        if (cal_answer.text.toString().isNotEmpty()) {
+                            countTotal(randomInt1, randomInt2)
+                        }
+                        else {
+                            Toast.makeText(this, getString(R.string.please_enter_ans), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
             }
         } else {
             Toast.makeText(this, getString(R.string.username_pass_wrong), Toast.LENGTH_SHORT).show()
@@ -182,12 +210,8 @@ class  MainActivity : AppCompatActivity() {
     }
 
     private fun rollDice() {
-
-        val randomInt1 = Random().nextInt(6) + 1
-        val randomInt2 = Random().nextInt(6) + 1
-
-
-
+        randomInt1 = Random().nextInt(6) + 1
+        randomInt2 = Random().nextInt(6) + 1
         val dice1 = when (randomInt1) {
             1 -> R.drawable.dice_1
             2 -> R.drawable.dice_2
@@ -207,13 +231,7 @@ class  MainActivity : AppCompatActivity() {
             else -> R.drawable.dice_6
         }
         diceImage2.setImageResource(dice2)
-        if (cal_answer.text.toString().isNotEmpty()) {
-            answer_calculation.setOnClickListener {
-                countTotal(randomInt1, randomInt2)
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.please_enter_ans), Toast.LENGTH_SHORT).show()
-        }
+
     }
 
     private fun countTotal(num1: Int, num2: Int) {
@@ -226,6 +244,7 @@ class  MainActivity : AppCompatActivity() {
             handler.increasePoint(login_username.text.toString(), plusPoints.toString())
             val newStreak = streak + 0
             cal_game_streak.text = newStreak.toString()
+            cal_answer.text.clear()
             rollDice()
         } else {
             val newStreak = 0
@@ -235,7 +254,7 @@ class  MainActivity : AppCompatActivity() {
     }
 
     private fun rollStar() {
-        val randomInt1 = Random().nextInt(8) + 1
+        randomInt1 = Random().nextInt(8) + 1
 
         val star = when (randomInt1) {
             1 -> R.drawable.star1
@@ -248,13 +267,7 @@ class  MainActivity : AppCompatActivity() {
             else -> R.drawable.star8
         }
 
-        if (num_answer.text.toString().isNotEmpty()) {
-            ans_number.setOnClickListener {
-                countTotalStar(randomInt1)
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.please_enter_ans), Toast.LENGTH_SHORT).show()
-        }
+
 
         starImage.setImageResource(star)
 
